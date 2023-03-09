@@ -1,2 +1,29 @@
-# machine-reading-restatements
-Predicting fraud vs. non-fraud (due to unintentional accounting mistakes) restatements using a machine reading approach
+# Classifying restatements: a machine-reading approach
+
+Revisits the work of Hennes, Leone, & Miller (2008), where companies' mandatory disclosures of restatements in 8-Ks are classified. Companies can restate due to fraud or unintentional accounting mistakes. Building on the previous approach, which looked for certain keywords contained in either the Exhibit 4.02 (the restatement section) or elsewhere in previous 8-K filings up to a year before and after the day the restatement is made. 
+
+## The measures
+
+We have 3 measures generated from implementing various NLP methods. We stick with a finite number of measures for now. Future research could expand upon this into a high-dimensional setting with many more text-mined measures. 
+
+To identify fraud vs. non-fraud, we use a dictionary method in which we search the 8-K for mentions of any variants of certain words contained in the dictionary, or "word list". This word list is built from our collective experience, having read 5000 of these restatements, noting patterns in the language managers used and gaining some comfort with the domain knowledge. 
+
+The next measure flags the restatement whether or not an uncertain, adverse regulatory event happened. It has been found that managers obfuscate negative news in their disclosures. Construction of this measure involves centering on a few key words, namely variants of the regulatory bodies SEC and DOJ mentioned in the 8-K text. Then, searching front and backwards within a radius of 20 words, we look for appearances of other words that potentially signal misconduct or regulatory intervention. These words are also contained in the dictionary word-list document. For example, we have included variants of "wells notice", "probe" and "investigation". 
+
+The last measure seeks to capture whether or not the company has launched internal investigations of their own or called in 3rd party invesstigators. Noncompliance is costly, so when companies initiate or conduct their own examinations into their material weaknesses, it indicates wrongdoing and a desire to lessen expected litigation costs via an increase degree of compliance with authorities. We search for pairs with variants of the words "internal" or "external" occuring first, followed by "rewiew", "examination" or "investigation" variants.  
+
+## Preliminary findings
+
+After using NLP methods and Python's regex package to annotate each restatement, a preliminary event study is conducted examining the cumulative abnormal returns of firms in the two groups: the fraduluent vs. the non-fraud restatement group. Although a pre-trend is noted 90 days before the restatement date, where CARs trend downward for both groups, the CAR dips precipitously for the fraudulent restatement group compared to a much more modest drop for the non-fraud group. 
+
+We then repeated these event studies comparing the cumulative abnormal returns for firms categorized into the SEC investigated vs. not investigated groups, and the launched internal/3rd party investigation vs. not launched groups. We see the robust difference in the behavior of returns after the restatement date for these two groups. The slightly downward sloping pre-trend is still present. These results are contained in (). 
+
+## Future directions
+
+### A. Human reading vs. machine reading 
+
+The collaborators on this project seek to extend this analysis to examine specific capital market outcomes as a result of potentially mis-classifying restatements that are supposed to be fraudulent. We hope to add on to the burgeoning literature on machine reading in financial accounting research. One idea is to examine whether human analysts' forecasts of earnings for these companies are farther off. A data vendor has also provided analogous measures, where they classified restatements as fraudulent or not, whether the nature of the restatement prompted regulatory agencies to get involved due to possible misleading of investors, or whether the company launched an investigation regarding the underlying cause of the restatement. We compared each of our machine-reading measures, and conducted event study analyses of cumulative abnormal returns across all these classifications alone. Based on observation alone, generally our measures show a much more pronounced difference in the cumulative abnormal returns between the two opposing groups compared to their measures. Results are contained in the Excel sheet () summarizing the output of the files (). 
+
+### B. Handling pre-trend in the event study of Cumulative Abnormal Returns 
+
+In all of these event studies, we note a negative-sloped pre-trend where returns trend negative 90 days even before the restatement. One cannot rule out the possibility of insider trading; however, there are other reasons aside from that conclusion. It is possible that restatements occur when a firm is absolutely no longer to hide any wrongdoing. A regulatory agency must have become involved prior to the observed restatement date that would be recorded on the filing date. Hence it would be extremely costly for the firm not to issue a restatement, as it is further proof that a firm intends to mislead not only participants in the capital markets, but regulators. On a related note, the restatement date may not reflect the earliest date when information about misconduct becomes known to capital market participants. An earlier ad-hoc analysis shows that the negative drift seems to disappear when the restatement dates are adjusted for when negative news about a firm related to the future restatement first becomes known via business press. Exploring which channel is most likely causing this seemingly negative drift in cumulative abnormal returns by including possible controls in the event study design, and employing novel econometric approaches to handle these source of endogeneity, may present an avenue for further research. 
